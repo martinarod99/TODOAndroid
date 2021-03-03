@@ -1,5 +1,7 @@
 package org.udg.pds.todoandroid.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -11,12 +13,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.udg.pds.todoandroid.R;
+import org.w3c.dom.Text;
 
 public class NavDrawerActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
@@ -33,7 +38,13 @@ public class NavDrawerActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+                    .setAction("ACTION", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent i = new Intent(NavDrawerActivity.this, TestActivity.class);
+                            startActivityForResult(i, 1);
+                        }
+                    }).show();
             }
         });
 
@@ -44,6 +55,20 @@ public class NavDrawerActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                String result = data.getStringExtra("result");
+                TextView tv = (TextView) findViewById(R.id.text_nd);
+                tv.setText(result);
+            } else {
+                Toast.makeText(this, "No result!", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
